@@ -1,7 +1,6 @@
 from torchvision import datasets, transforms
 import torch
 import numpy as np
-from mnist import MNIST
 import random
 import warnings
 import time

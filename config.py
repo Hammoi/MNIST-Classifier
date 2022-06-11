@@ -1,6 +1,6 @@
 
 #Training
-network_size = (100,2) #neurons per layer, number of HIDDEN layers #TODO: cannot change layers, must fix
+network_size = (397,1) #neurons per layer, number of HIDDEN layers #TODO: cannot change layers, must fix
 random_theta = True
 iterations = 100
 samples = 10000 #up to 60,000
