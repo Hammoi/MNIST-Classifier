@@ -20,8 +20,6 @@ def train_network(x, y): #player = 0,1
     else:
         t = reform.reform_theta(np.genfromtxt(config.theta_dir))
 
-    costs = []
-    c = 0 #cost
     g = [] #gradient
     for i in range(len(t)):
         g.append(np.zeros(np.shape(t[i])))
@@ -30,25 +28,52 @@ def train_network(x, y): #player = 0,1
 
         iteration_start = time.time()
         #print("training data {}".format(i))
-        hypothesis0 = hypothesis.hypothesis(t, x)
-        gradient = computeGradient.computeGradient(t, x, y)
+        c = 0
+        costs = []
+        gradients = []
+        if config.split_data:
+            splice_size = int(config.samples/config.splices)
+            for i in range(config.splices):
+                x_splice = x[i*splice_size:(i+1)*(splice_size)]
+                y_splice = y[i*splice_size:(i+1)*(splice_size)]
+                hypothesis0 = hypothesis.hypothesis(t, x_splice)
+                gradient = computeGradient.computeGradient(t, x_splice, y_splice)
+                gradients.append(gradient)
+
+                cost0 = cost.cost(hypothesis0,y_splice)
+                costs.append(cost0)
+
+            c = sum(costs)/len(costs)
+
+            gradient_sum = []
+            for i in range(len(gradients[0])):
+                gradient_sum.append(sum([item[i] for item in gradients]))
+            g = []
+            for i in range(len(gradient_sum)):
+                g.append(gradient_sum[i]/len(gradients))
+
+        else:
+            hypothesis0 = hypothesis.hypothesis(t, x)
+            gradient = computeGradient.computeGradient(t, x, y)
 
 
-        cost0 = cost.cost(hypothesis0,y)
+            cost0 = cost.cost(hypothesis0,y)
+
+            g = gradient
+            c = cost0
+
+
         #either place epsilon here or place at t - g
 
-        g = gradient
-
-
-        costs.append(cost0)
-        c = cost0
+        if(config.split_data):
+            costs = []
+            gradients = []
 
         for i in range(len(t)):
             temp = np.copy(t[i])
             temp[:,0] = 0
             t[i] = t[i]-(g[i] + config.lamb*temp/m) #adds regularization
 
-        g = [] #gradient
         iteration_end = time.time()
         print("finished iteration {} of {}. cost: {}. computation time: {} seconds".format(j+1, config.iterations, c, iteration_end-iteration_start))
 

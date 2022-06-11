@@ -35,6 +35,10 @@ cv_data = np.reshape(cv_data, (config.cv_samples, 784))
 
 
 print("beginning training:")
+print("training network size: {}".format(config.network_size))
+print("using splices: {}".format(config.split_data))
+if config.split_data:
+    print("splice size: {}".format(config.samples/config.splices))
 vectorized_start = time.time()
 vectorized_train_network.train_network(training_data, training_labels_binary)
 vectorized_end = time.time()

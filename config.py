@@ -3,7 +3,9 @@
 network_size = (397,1) #neurons per layer, number of HIDDEN layers #TODO: cannot change layers, must fix
 random_theta = True
 iterations = 100
-samples = 10000 #up to 60,000
+split_data = False #split gradient computation up into multiple iterations (if memory error)
+splices = 4 #must equal whole number when dividing samples
+samples = 100 #up to 60,000
 available_samples = 60000
 cv_samples = 100
 available_cv_samples = 10000
