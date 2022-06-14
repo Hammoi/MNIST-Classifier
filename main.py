@@ -12,6 +12,7 @@ from classifier import get_data
 from gui import window
 
 from classifier.network.functions import hypothesis
+from classifier.network.functions import cost
 from classifier.network.functions import reform
 from classifier.network.functions import to_binary
 
@@ -24,17 +25,16 @@ training_data[training_data > 0] = 1
 
 training_data = np.reshape(training_data, (config.samples, 784))
 training_labels_binary = to_binary.to_binary(training_labels)
-print("training labels:")
-print(training_labels)
-print("training_labels_binary:")
-print(training_labels_binary)
+
 
 cv_data, cv_labels = get_data.get_testing_data(config.cv_samples)
 cv_data[cv_data > 0] = 1
 cv_data = np.reshape(cv_data, (config.cv_samples, 784))
 
 
+
 print("beginning training:")
+print("using random theta: {}".format(config.random_theta))
 print("training network size: {}".format(config.network_size))
 print("using splices: {}".format(config.split_data))
 if config.split_data:
@@ -56,7 +56,7 @@ for i in range(config.cv_samples):
     # print("acutal: {}".format(cv_labels[i]))
     # print("visual representation: {}".format(cv_data[i]))
 
-    if guess == cv_labels[i]:
+    if guess == training_labels[i]:
         correct += 1
 
 # correct = 0
@@ -71,7 +71,7 @@ for i in range(config.cv_samples):
 #         correct += 1
 
 print("finished cross validation")
-print("accuracy: {} out of {}".format(correct, config.samples))
+print("accuracy: {} out of {}".format(correct, config.cv_samples))
 print("starting gui")
 
 window.start_gui()

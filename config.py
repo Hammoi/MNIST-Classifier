@@ -1,18 +1,20 @@
 
 #Training
 network_size = (397,1) #neurons per layer, number of HIDDEN layers #TODO: cannot change layers, must fix
-random_theta = True
+random_theta = False
 iterations = 100
-split_data = False #split gradient computation up into multiple iterations (if memory error)
+split_data = True #split gradient computation up into multiple iterations (if memory error)
 splices = 4 #must equal whole number when dividing samples
-samples = 100 #up to 60,000
+samples = 60000 #up to 60,000
 available_samples = 60000
-cv_samples = 100
+cv_samples = 10000
 available_cv_samples = 10000
-lamb = 0.01 #for regularization of gradient
+overwrite_theta_per_iteration = True #write theta to file after every iteration
+lamb = 0.05 #for regularization of gradient
 #TODO: the number of neurons per layer currently has to be greater than the number of input and output units; this can be fixed but im lazy
 
 input = 784 #number of input units
 output = 10 #number of output units
 
 theta_dir = "data/network/theta.txt"
+temp_theta_dir = "data/network/temp_theta.txt"

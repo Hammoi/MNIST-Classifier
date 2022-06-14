@@ -15,4 +15,6 @@ def send(array): #28*28, flattened
 
     hypo = hypothesis.hypothesis(thetas, array)
 
-    print(np.argmax(hypo))
+    print("network guess: {}".format(np.argmax(hypo)))
+    print("with {}% certainty".format(np.max(hypo)/np.sum(hypo)))
+    print("hypothesis: {}".format(hypo))

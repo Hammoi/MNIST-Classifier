@@ -34,6 +34,7 @@ def train_network(x, y): #player = 0,1
         if config.split_data:
             splice_size = int(config.samples/config.splices)
             for i in range(config.splices):
+                print("training data splice: {} to {}".format(i*splice_size,(i+1)*(splice_size)))
                 x_splice = x[i*splice_size:(i+1)*(splice_size)]
                 y_splice = y[i*splice_size:(i+1)*(splice_size)]
                 hypothesis0 = hypothesis.hypothesis(t, x_splice)
@@ -76,6 +77,14 @@ def train_network(x, y): #player = 0,1
 
         iteration_end = time.time()
         print("finished iteration {} of {}. cost: {}. computation time: {} seconds".format(j+1, config.iterations, c, iteration_end-iteration_start))
+
+        if(config.overwrite_theta_per_iteration):
+            flatThetas = np.array(())
+            for i in range(len(t)):
+                flatThetas = np.append(flatThetas, t[i])
+
+            np.savetxt(config.temp_theta_dir, flatThetas) #Overwrites current theta values. TODO: fix numpy conversion
+            print("saved temporary theta to file")
 
     #print("finished, saving thetas")
 
