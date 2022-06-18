@@ -13,6 +13,9 @@ class DrawableGrid(tk.Frame):
         canvas_height = height*size
         self.canvas = tk.Canvas(self, bd=0, highlightthickness=0, width=canvas_width, height=canvas_height)
         self.canvas.pack(fill="both", expand=True, padx=2, pady=2)
+        self.current_guess = -1
+        self.current_guess_label = tk.StringVar()
+        self.set_current_guess(-1)
 
         for row in range(self.height):
             for column in range(self.width):
@@ -23,6 +26,13 @@ class DrawableGrid(tk.Frame):
                                              tags=(self._tag(row, column),"cell" ))
         self.canvas.tag_bind("cell", "<B1-Motion>", self.paint)
         self.canvas.tag_bind("cell", "<1>", self.paint)
+
+    def set_current_guess(self, new_guess):
+        self.current_guess = new_guess
+        if new_guess == -1:
+            self.current_guess_label.set("Network Hypothesis: N\A")
+        else:
+            self.current_guess_label.set("Network Hypothesis: {}".format(self.current_guess))
 
     def _tag(self, row, column):
         """Return the tag for a given row and column"""
@@ -40,10 +50,12 @@ class DrawableGrid(tk.Frame):
                 output += value
 
             numpy_output = np.append(numpy_output, np.fromiter(output, (np.unicode,1)).astype(np.int))
-        send_data.send(numpy_output)
+        guess = send_data.send(numpy_output)
+        self.set_current_guess(guess)
 
     def clear(self):
         self.canvas.delete("all")
+        self.set_current_guess(-1)
         for row in range(self.height):
             for column in range(self.width):
                 x0, y0 = (column * self.size), (row*self.size)
@@ -68,10 +80,14 @@ def start_gui():
     root = tk.Tk()
 
     canvas = DrawableGrid(root, width=28, height=28, size=20)
-    b = tk.Button(root, text="Send to Classifier", command=canvas.get_pixels)
+    b = tk.Button(root, text="Send to Classifier", command=lambda: canvas.get_pixels())
     b.pack(side="top")
     canvas.pack(fill="both", expand=True)
 
     clear = tk.Button(root, text="Clear Canvas", command=canvas.clear)
     clear.pack(side="bottom")
+
+    guess = tk.Label(root, textvariable=canvas.current_guess_label)
+
+    guess.pack(side="bottom")
     root.mainloop()

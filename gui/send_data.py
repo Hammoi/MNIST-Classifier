@@ -9,12 +9,12 @@ np.set_printoptions(edgeitems=30, linewidth=1000,
 def send(array): #28*28, flattened
     data = np.reshape(array, (28,28))
     print("sending")
-    print(data)
+    #print(data)
     thetas = reform.reform_theta(np.genfromtxt(config.theta_dir))
 
 
     hypo = hypothesis.hypothesis(thetas, array)
-
     print("network guess: {}".format(np.argmax(hypo)))
-    print("with {}% certainty".format(np.max(hypo)/np.sum(hypo)))
+    print("with {}% certainty".format(np.max(hypo)/np.sum(hypo)*100))
     print("hypothesis: {}".format(hypo))
+    return np.argmax(hypo)
